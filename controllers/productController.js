@@ -29,7 +29,6 @@ export const addPrduct = (req, res) => {
 
 export const getAllProducts = (req, res) => {
     try {
-        // const { title, price, description, category, image} = req.body;
 
         fetch('https://fakestoreapi.com/products')
         .then(res=>res.json())
