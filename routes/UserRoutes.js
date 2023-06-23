@@ -1,18 +1,17 @@
 import express from "express";
-import { checksForRegister, sellerMiddleware } from "../middlewares/authMiddleware.js";
+import { checksForRegister, middlewareForAddProduct, middlewareForDeleteProduct, middlewareForGetProduct, middlewareForUpdateProduct } from "../middlewares/authMiddleware.js";
 import { register } from "../controllers/userController.js";
-import { addPrduct, deleteProduct, getAllCategories, getAllProducts, getPoductById, getProductByLimit } from "../controllers/productController.js";
+import { addPrduct, deleteProduct, getAllProducts, getPoductById, updateProduct } from "../controllers/productController.js";
 
 
 var router = express.Router();
 
 router.post('/register',checksForRegister,register);
-router.post('/addPrduct',sellerMiddleware,addPrduct);
-router.get('/getAllProducts',getAllProducts);
+router.post('/addPrduct',middlewareForAddProduct,addPrduct);
+router.get('/getAllProducts',middlewareForGetProduct,getAllProducts);
 router.get('/getPoductById',getPoductById);
-router.get('/getProductByLimit',getProductByLimit);
-router.get('/getAllCategories',getAllCategories);
-router.delete('/deleteProduct',deleteProduct);
+router.put('/updateProduct',middlewareForUpdateProduct,updateProduct);
+router.delete('/deleteProduct',middlewareForDeleteProduct,deleteProduct);
 
 
 // deleteProduct

@@ -1,105 +1,70 @@
+import axios from "axios";
+const fakestoreApiUrl = 'https://fakestoreapi.com/';
 
-export const addPrduct = (req, res) => {
+
+export const addPrduct = async (req, res) => {
+    const { title, price, description, category, image } = req.body;
     try {
-        const { title, price, description, category, image, id, pin } = req.body;
-
-        fetch('https://fakestoreapi.com/products', {
-            method: "POST",
-            body: JSON.stringify(
-                {
-                    title: title,
-                    price: price,
-                    description: description,
-                    image: image,
-                    category: category
-                }
-            )
-        })
-            .then(res => res.json())
-            .then(json => {
-                console.log(json)
-                res.send(json)
-            })
-
+        const response = await axios.post(`${fakestoreApiUrl}products`, {
+            title,
+            price,
+            description,
+            category,
+            image,
+        });
+        res.json(response.data);
     } catch (error) {
-        return res.send(error)
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
 
 
-export const getAllProducts = (req, res) => {
+export const getAllProducts = async (req, res) => {
     try {
-
-        fetch('https://fakestoreapi.com/products')
-        .then(res=>res.json())
-        .then(json=>{
-            console.log(json)
-            res.send(json)
-        })
-
+        const response = await axios.get(`${fakestoreApiUrl}products`);
+        res.json(response.data);
     } catch (error) {
-        return res.send(error)
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
 
-export const getPoductById = (req, res) => {
+export const getPoductById = async (req, res) => {
+    const { id } = req.body;
     try {
-        // const { title, price, description, category, image} = req.body;
+        const response = await axios.get(`${fakestoreApiUrl}products/${id}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(404).json({ error: 'Product not found' });
+    }
+}
 
-        fetch('https://fakestoreapi.com/products/2')
-        .then(res=>res.json())
-        .then(json=>{
-            console.log(json)
-            res.send(json)
-        })
-            
+// Update a product
+export const updateProduct = async (req, res) => {
+    // const { id } = req.params;
+    const {id, title, price, description, category, image } = req.body;
+    try {
+        const response = await axios.put(`${fakestoreApiUrl}products/${id}`, {
+            title,
+            price,
+            description,
+            category,
+            image,
+        });
+        res.json(response.data);
+    } catch (error) {
+        res.status(404).json({ error: 'Product not found' });
+    }
+};
+
+
+export const deleteProduct = async(req, res) => {
+    const { id } = req.body;
+    try {
+        await axios.delete(`${fakestoreApiUrl}products/${id}`);
+        res.send("product deleted successfully.")
         
-
     } catch (error) {
-        return res.send(error)
-    }
-}
-
-export const getProductByLimit = (req, res) => {
-    try {
-        // const { title, price, description, category, image} = req.body;
-        fetch('https://fakestoreapi.com/products?limit=5')
-        .then(res=>res.json())
-        .then(json=>{console.log(json)
-            res.send(json)
-        })
-            
-        
-
-    } catch (error) {
-        return res.send(error)
-    }
-}
-
-export const getAllCategories = (req, res) => {
-    try {
-        fetch('https://fakestoreapi.com/products/categories')
-        .then(res=>res.json())
-        .then(json=>{console.log(json)
-            res.send(json)
-        })
-
-    } catch (error) {
-        return res.send(error)
-    }
-}
-
-export const deleteProduct = (req, res) => {
-    try {
-        fetch('https://fakestoreapi.com/products/6',{
-            method:"DELETE"
-        })
-            .then(res=>res.json())
-            .then(json=>{console.log(json)
-                res.send(json)
-            })
-    } catch (error) {
-        return res.send(error)
+        res.status(404).json({ error: 'Product not found' });
     }
 }
 
